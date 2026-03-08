@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Circle of Fifths</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "tone": "https://esm.sh/tone@15.1.22"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left">
+      <svg id="svg" viewBox="0 0 420 420" aria-label="Circle of Fifths"></svg>
+
+      <div class="legend">
+        <span class="pill"><span class="dot" style="background:var(--tonic)"></span> Tonic</span>
+        <span class="pill"><span class="dot" style="background:var(--dominant)"></span> Dominant</span>
+        <span class="pill"><span class="dot" style="background:var(--subdominant)"></span> Subdominant</span>
+        <span class="pill"><span class="dot" style="background:var(--diatonic)"></span> Other diatonic</span>
+        <span class="pill"><span class="dot" style="background:var(--nondiatonic)"></span> Non-diatonic</span>
+      </div>
+
+      <div class="muted" style="margin-top:10px; margin-bottom: 10px;">
+        Drag background to rotate &bull; Click outer (major) or inner (minor) keys
+      </div>
+
+
+    </div>
+
+    <div class="panel">
+      <div class="row">
+        <div class="title">Selected tonality</div>
+        <div class="muted" id="modeLabel">Mode: Major</div>
+      </div>
+
+      <div id="info" class="box"></div>
+
+      <div class="box">
+        <details class="chords-accordion" id="chordsAccordion">
+          <summary style="display:flex; justify-content:space-between; gap:12px; align-items:baseline; cursor:pointer; list-style:none;">
+            <div style="display:flex; gap:12px; align-items:baseline;">
+              <div style="font-weight:700;">Chords in key</div>
+              <div class="muted">(diatonic triads)</div>
+            </div>
+            <span class="accordion-arrow">&#9654;</span>
+          </summary>
+
+          <div class="chords">
+            <table>
+              <thead>
+                <tr>
+                  <th>Grade</th>
+                  <th>Chord</th>
+                  <th class="mono">Tones</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="chordsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="muted" style="margin-top:10px;" id="audioStatus">
+            Audio powered by Tone.js with Salamander Grand Piano samples. First click loads audio.
+          </div>
+        </details>
+      </div>
+
+      <div class="box" id="progBox">
+        <div style="font-weight:700;">Progression Builder</div>
+        <div class="muted" style="margin-top:6px;">Common progressions:</div>
+        <div class="prog-presets" id="progPresets"></div>
+        <div class="muted" style="margin-top:8px;">Click to add chords:</div>
+        <div class="prog-builder" id="progBuilder"></div>
+        <div class="prog-sequence" id="progSequence"></div>
+        <div class="prog-controls" id="progControls" style="display:none;">
+          <button class="prog-play-btn" id="progPlayBtn">&#9654; Play</button>
+          <label class="muted">BPM: <span id="bpmLabel">100</span></label>
+          <input type="range" id="bpmSlider" min="60" max="180" value="100" class="bpm-slider">
+          <button class="prog-clear-btn" id="progClearBtn">Clear</button>
+        </div>
+      </div>
+            <div class="box" id="arpeggioBox">
+        <div style="font-weight:700;">Arpeggio Style</div>
+        <div class="arpeggio-grid" id="arpeggioGrid"></div>
+      </div>
+
+      <div class="box" id="instrumentBox">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:700;">Instrument</div>
+          <label id="sustainLabel" style="font-size:11px; color:rgba(255,255,255,0.7); cursor:pointer; display:flex; align-items:center; gap:4px;">
+            <input type="checkbox" id="sustainToggle" checked style="accent-color:#00d2ff;"> Sustain
+          </label>
+        </div>
+        <div class="instrument-grid" id="instrumentGrid"></div>
+      </div>
+      
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
