@@ -7,6 +7,7 @@ import { KEYS, ARPEGGIO_PATTERNS } from "./constants.js";
 import {
   pickSpelling, stripMinorSuffix, buildScale, buildTriads,
   chainMapMajor, chainMapMinor, prefersFlats, degreeToCirclePos,
+  translateNote, setNoteNaming,
 } from "./music-theory.js";
 import { playWithPattern, preload, isLoaded } from "./audio-engine.js";
 import { escapeHtml, notesToPianoData, renderPiano } from "./renderers.js";
@@ -71,13 +72,17 @@ function render() {
   const displayName = isMajor ? keyObj.major : keyObj.minor;
   const relLabel = isMajor ? keyObj.minor : keyObj.major;
 
+  // Sync naming mode from toggle DOM state
+  const namingEl = document.getElementById("namingToggle");
+  setNoteNaming(namingEl && namingEl.getAttribute("aria-checked") === "true" ? "solfege" : "letters");
+
   infoEl.innerHTML = `
-    <div><strong style="font-size:18px;">${displayName}</strong>
-      <span class="muted" style="margin-left:8px;">(relative: ${relLabel})</span>
+    <div><strong style="font-size:18px;">${translateNote(displayName)}</strong>
+      <span class="muted" style="margin-left:8px;">(relative: ${translateNote(relLabel)})</span>
     </div>
     <div style="margin-top:8px; font-size:13px; color:var(--muted);">Scale notes:</div>
     <div class="scale-notes">
-      ${scaleNotes.map((n, i) => `<span class="scale-note${i === 0 ? ' root' : ''}">${n}</span>`).join("")}
+      ${scaleNotes.map((n, i) => `<span class="scale-note${i === 0 ? ' root' : ''}">${translateNote(n)}</span>`).join("")}
     </div>
     ${renderPiano(scalePiano.pcs, scalePiano.pcToLabel, scalePiano.rootPc, "full")}
   `;
@@ -88,13 +93,13 @@ function render() {
     return `
       <tr>
         <td class="chord-grade mono"><strong>${t.numeral}</strong></td>
-        <td class="chord-name"><strong>${t.chord}</strong></td>
+        <td class="chord-name"><strong>${translateNote(t.chord)}</strong></td>
         <td class="chord-piano-cell">
           ${renderPiano(cp.pcs, cp.pcToLabel, cp.rootPc, "mini")}
-          <span class="mono" style="color:rgba(255,255,255,0.5);font-size:12px;">${t.tones.join(" — ")}</span>
+          <span class="mono" style="color:rgba(255,255,255,0.5);font-size:12px;">${t.tones.map(n => translateNote(n)).join(" — ")}</span>
         </td>
         <td style="text-align:right; vertical-align:middle;">
-          <button class="playBtn" data-tones="${t.tones.join(",")}" title="Play ${t.chord} chord">&#x1f50a; Play</button>
+          <button class="playBtn" data-tones="${t.tones.join(",")}" title="Play ${translateNote(t.chord)} chord">&#x1f50a; Play</button>
         </td>
       </tr>`;
   }).join("");
@@ -226,6 +231,17 @@ document.addEventListener("keydown", () => {
     preload().then(() => render());
   }
 }, { once: false });
+
+// --- Note naming toggle (visual handled by inline script in HTML) ---
+
+window._onNamingToggle = () => {
+  try {
+    render();
+  } catch (e) {
+    console.error("render() error on naming toggle:", e);
+    document.title = "ERROR: " + e.message;
+  }
+};
 
 // --- Initial render ---
 render();

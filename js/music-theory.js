@@ -10,6 +10,25 @@ import {
 
 const BASE_PC_MAP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
+// --- Note naming (letters vs solfège) ---
+
+const SOLFEGE_MAP = { C: "Do", D: "Re", E: "Mi", F: "Fa", G: "Sol", A: "La", B: "Si" };
+
+let _noteNaming = "letters"; // "letters" | "solfege"
+
+export function setNoteNaming(mode) { _noteNaming = mode; }
+export function getNoteNaming() { return _noteNaming; }
+
+/**
+ * Translate a note/chord label to the current naming convention.
+ * Handles accidentals, minor suffix, dim, enharmonic slashes, etc.
+ * e.g. "F#m" → "Fa#m", "Bb" → "Sib", "F# / Gb" → "Fa# / Solb"
+ */
+export function translateNote(label) {
+  if (_noteNaming === "letters") return label;
+  return label.replace(/([A-G])([#b]*)/g, (_, letter, acc) => SOLFEGE_MAP[letter] + acc);
+}
+
 /** Modulo 12 that always returns 0–11 (handles negatives). */
 export function mod12(n) {
   return ((n % 12) + 12) % 12;

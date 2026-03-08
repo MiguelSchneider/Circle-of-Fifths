@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Circle of Fifths</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
   <script type="importmap">
     {
@@ -18,6 +19,38 @@
 <body>
   <div class="container">
     <div class="left">
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;">
+        <span id="namingLabelLetters" style="font-size:13px;color:rgba(255,255,255,0.95);font-weight:600;">C D E</span>
+        <div id="namingToggle" role="switch" aria-checked="false" aria-label="Switch note naming" tabindex="0"
+             style="width:52px;height:30px;background:rgba(255,255,255,0.18);border-radius:30px;position:relative;cursor:pointer;flex-shrink:0;">
+          <div id="namingKnob"
+               style="position:absolute;height:24px;width:24px;left:3px;top:3px;background:rgba(255,255,255,0.75);border-radius:50%;transition:transform 0.25s,background 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.4);pointer-events:none;">
+          </div>
+        </div>
+        <span id="namingLabelSolfege" style="font-size:13px;color:rgba(255,255,255,0.4);font-weight:600;">Do Re Mi</span>
+      </div>
+      <script>
+        // Standalone toggle — works independently of ES modules
+        (function() {
+          var on = false;
+          var track = document.getElementById('namingToggle');
+          var knob = document.getElementById('namingKnob');
+          var lbl1 = document.getElementById('namingLabelLetters');
+          var lbl2 = document.getElementById('namingLabelSolfege');
+          track.addEventListener('click', function(e) {
+            e.stopPropagation();
+            on = !on;
+            knob.style.transform = on ? 'translateX(22px)' : 'translateX(0)';
+            knob.style.background = on ? '#3b82f6' : 'rgba(255,255,255,0.75)';
+            track.style.background = on ? 'rgba(59,130,246,0.35)' : 'rgba(255,255,255,0.18)';
+            lbl1.style.color = on ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.95)';
+            lbl2.style.color = on ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.4)';
+            track.setAttribute('aria-checked', String(on));
+            // Notify module system if loaded
+            if (window._onNamingToggle) window._onNamingToggle(on);
+          });
+        })();
+      </script>
       <svg id="svg" viewBox="0 0 420 420" aria-label="Circle of Fifths"></svg>
 
       <div class="legend">

@@ -9,6 +9,7 @@ import {
 } from "./constants.js";
 import { playWithPattern } from "./audio-engine.js";
 import { escapeHtml, renderArpRoll, renderWaveformPreview } from "./renderers.js";
+import { translateNote } from "./music-theory.js";
 
 export class ProgressionBuilder {
   constructor({ onRender }) {
@@ -54,7 +55,7 @@ export class ProgressionBuilder {
     ).join("");
 
     els.builder.innerHTML = currentTriads.map((t, d) =>
-      `<button class="prog-chord-btn" data-degree="${d}">${escapeHtml(roman[d])} <span style="opacity:0.6">${escapeHtml(t.chord)}</span></button>`
+      `<button class="prog-chord-btn" data-degree="${d}">${escapeHtml(roman[d])} <span style="opacity:0.6">${escapeHtml(translateNote(t.chord))}</span></button>`
     ).join("");
 
     if (progression.length > 0) {
@@ -62,7 +63,7 @@ export class ProgressionBuilder {
         const isActive = isPlaying && i === playbackIndex;
         return `<div class="prog-pill${isActive ? ' active' : ''}">
           <span class="prog-pill-num">${escapeHtml(roman[deg])}</span>
-          ${escapeHtml(currentTriads[deg].chord)}
+          ${escapeHtml(translateNote(currentTriads[deg].chord))}
           <span class="prog-pill-x" data-remove="${i}">&times;</span>
         </div>`;
       }).join("");

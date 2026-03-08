@@ -5,6 +5,7 @@
 
 import { KEYS, CENTER, RADIUS_OUTER, RADIUS_INNER } from "./constants.js";
 import { escapeHtml } from "./renderers.js";
+import { translateNote } from "./music-theory.js";
 
 // --- Geometry helpers ---
 
@@ -60,7 +61,7 @@ function buildNodeMarkup(i, radius, ringMode, state) {
   }
 
   const circleFill = roleToColor(role);
-  const label = (ringMode === "major") ? k.major : k.minor;
+  const label = translateNote((ringMode === "major") ? k.major : k.minor);
   const r = isSelected ? 17 : (isRelative ? 14 : 12);
 
   const isColored = role !== "nondiatonic" || isSelected;

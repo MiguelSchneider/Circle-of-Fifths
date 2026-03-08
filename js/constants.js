@@ -60,6 +60,7 @@ export const ARPEGGIO_PATTERNS = [
   { id: "pop", name: "Pop Ballad", steps: [[0], [1], [2], [1]] },
   { id: "ascending", name: "Ascending", steps: [[0], [1], [2]] },
   { id: "descending", name: "Descending", steps: [[2], [1], [0]] },
+  { id: "miguel", name: "Miguel", steps: [[0, 2], [1], [0]] },
 ];
 
 // Instrument definitions for the audio engine

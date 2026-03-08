@@ -4,7 +4,7 @@
  */
 
 import { PIANO_WHITE_PCS, PIANO_BLACK_PCS, PIANO_BLACK_POS } from "./constants.js";
-import { noteToPc } from "./music-theory.js";
+import { noteToPc, translateNote } from "./music-theory.js";
 
 /** Escape special characters for safe HTML/SVG insertion. */
 export function escapeHtml(s) {
@@ -47,7 +47,7 @@ export function renderPiano(highlightPcs, pcToLabel, rootPc, size) {
     const pc = PIANO_WHITE_PCS[i];
     const on = highlightPcs.has(pc);
     const root = pc === rootPc;
-    const label = on ? (pcToLabel.get(pc) || "") : "";
+    const label = on ? translateNote(pcToLabel.get(pc) || "") : "";
     const cls = "pk-w" + (root ? " pk-root" : on ? " pk-on" : "");
     html += `<div class="${cls}" style="width:${ww}px;font-size:${fs}px;">${escapeHtml(label)}</div>`;
   }
@@ -56,7 +56,7 @@ export function renderPiano(highlightPcs, pcToLabel, rootPc, size) {
     const pc = PIANO_BLACK_PCS[i];
     const on = highlightPcs.has(pc);
     const root = pc === rootPc;
-    const label = on ? (pcToLabel.get(pc) || "") : "";
+    const label = on ? translateNote(pcToLabel.get(pc) || "") : "";
     const left = PIANO_BLACK_POS[i] * ww - bw / 2;
     const cls = "pk-b" + (root ? " pk-root" : on ? " pk-on" : "");
     html += `<div class="${cls}" style="left:${left}px;width:${bw}px;height:${bh}px;font-size:${bfs}px;">${escapeHtml(label)}</div>`;
